@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './layout/components/header.component';
+import { BoardPageComponent } from './board/components/board-page.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  imports: [BoardPageComponent, HeaderComponent],
+  template: `<div>
+    <app-header />
+    <app-board-page />
+  </div>`,
 })
-export class AppComponent {
-  title = 'kanban';
-}
+export class AppComponent {}
