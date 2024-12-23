@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-user-card',
   imports: [],
   template: `
     <div>
-      <span>{{ username }}</span>
-      <button (click)="toggleAuth.emit()" [class]="isConnected ? 'connected' : ''">
-        {{ isConnected ? 'Log out' : 'Log in' }}
+      <span>{{ username() }}</span>
+      <button (click)="toggleAuth.emit()" [class]="isConnected() ? 'connected' : ''">
+        {{ isConnected() ? 'Log out' : 'Log in' }}
       </button>
     </div>
   `,
@@ -35,13 +35,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   `,
 })
 export class UserCardComponent {
-  @Input()
-  username: string = '';
-
-  @Output()
-  toggleAuth = new EventEmitter<void>();
-
-  get isConnected() {
-    return !!this.username;
-  }
+  username = input<string>('');
+  toggleAuth = output<void>();
+  isConnected = computed(() => !!this.username());
 }

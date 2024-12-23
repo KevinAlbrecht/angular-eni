@@ -1,24 +1,14 @@
-import {
-  ContentChildren,
-  Directive,
-  EventEmitter,
-  HostListener,
-  Input,
-  Output,
-  QueryList,
-} from '@angular/core';
+import { ContentChildren, Directive, HostListener, QueryList, input, output } from '@angular/core';
 import { REORDER_DROP_DATATYPE } from '../constants';
 import { DraggableDirective } from './draggable.directive';
+import { DragDropPayload } from '../models';
 
 @Directive({
   selector: '[appDroppable]',
 })
 export class DroppableDirective {
-  @Input({ required: true })
-  columnId!: string;
-
-  @Output()
-  dropItem = new EventEmitter();
+  columnId = input.required<string>();
+  dropItem = output<DragDropPayload>();
 
   @ContentChildren(DraggableDirective)
   draggables!: QueryList<DraggableDirective>;
@@ -40,12 +30,12 @@ export class DroppableDirective {
     const data = dt.getData(REORDER_DROP_DATATYPE);
     let destination = {
       id: '',
-      columnId: this.columnId,
+      columnId: this.columnId(),
     };
 
     this.draggables.forEach((draggable) => {
       if (draggable.hasDragEntered) {
-        destination = draggable.appDraggableData;
+        destination = draggable.appDraggableData();
       }
 
       draggable.reset();

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-nav-menu',
@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   template: `
     <div>
       <a>Board</a>
-      <a [class]="isAdmin ? '' : 'disabled'">Admin</a>
+      <a [class]="isAdmin() ? '' : 'disabled'">Admin</a>
     </div>
   `,
   styles: `
@@ -27,6 +27,5 @@ import { Component, Input } from '@angular/core';
   `,
 })
 export class NavMenuComponent {
-  @Input()
-  isAdmin: boolean = false;
+  isAdmin = input<boolean>(false);
 }

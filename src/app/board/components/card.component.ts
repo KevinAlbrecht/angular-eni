@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Ticket } from '../models';
 import { TitleLimiterPipe } from '../pipes/title-limiter.pipe';
 
@@ -6,9 +6,11 @@ import { TitleLimiterPipe } from '../pipes/title-limiter.pipe';
   selector: 'app-card',
   imports: [TitleLimiterPipe],
   template: `
-    <div id="wrapper" [class]="ticket.type">
-      <h4>{{ ticket.title | titleLimiter }}</h4>
-      <span>{{ ticket.assignee || 'unassigned' }}</span>
+    <div id="wrapper" [class]="ticket().type">
+      <h4>
+        {{ ticket().title | titleLimiter }}
+      </h4>
+      <span>{{ ticket().assignee || 'unassigned' }}</span>
     </div>
   `,
   styles: `
@@ -57,6 +59,5 @@ import { TitleLimiterPipe } from '../pipes/title-limiter.pipe';
   `,
 })
 export class CardComponent {
-  @Input({ required: true })
-  ticket!: Ticket;
+  ticket = input.required<Ticket>();
 }

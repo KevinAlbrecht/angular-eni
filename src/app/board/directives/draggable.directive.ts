@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, input } from '@angular/core';
 import { REORDER_DROP_DATATYPE } from '../constants';
 
 @Directive({
@@ -9,11 +9,10 @@ export class DraggableDirective {
   @HostBinding('class.dragging') isDragging = false;
   @HostBinding('class.drag-entered') hasDragEntered = false;
 
-  @Input({ required: true })
-  appDraggableData!: {
+  appDraggableData = input.required<{
     id: string;
     columnId: string;
-  };
+  }>();
 
   @HostListener('dragenter', ['$event'])
   ondragEnter(event: DragEvent) {
@@ -33,7 +32,7 @@ export class DraggableDirective {
   onDragStart(event: DragEvent) {
     this.isDragging = true;
     if (event.dataTransfer) {
-      event.dataTransfer.setData(REORDER_DROP_DATATYPE, JSON.stringify(this.appDraggableData));
+      event.dataTransfer.setData(REORDER_DROP_DATATYPE, JSON.stringify(this.appDraggableData()));
     }
   }
 

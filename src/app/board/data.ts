@@ -1,6 +1,6 @@
 import { Board } from './models';
 
-export const allBoard: Board = {
+const allBoard: Board = {
   columns: [
     {
       id: '1',
@@ -70,3 +70,11 @@ export const allBoard: Board = {
     },
   ],
 };
+
+async function wait(miliseconds: number) {
+  return new Promise((r) => setTimeout(r, miliseconds));
+}
+export async function getData() {
+  await wait(800);
+  return allBoard;
+}

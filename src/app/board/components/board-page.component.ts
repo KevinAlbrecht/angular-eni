@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { ColumnComponent } from './column.component';
-import { allBoard } from '../data';
+import { getData } from '../data';
 import { Column, DragDropLocation, Ticket } from '../models';
 
 @Component({
@@ -9,15 +9,23 @@ import { Column, DragDropLocation, Ticket } from '../models';
   template: `
     <div id="wrapper">
       <div id="columns-wrapper">
-        @for (column of columns; track column.id) {
-          <app-column
-            [column]="column"
-            [tickets]="ticketByColumnId[column.id]"
-            (addTicket)="addTicket(column.id)"
-            (reorderTicket)="onReorderTicket($event)"
-          />
-        } @empty {
-          <p>No column</p>
+        @if (isLoadingBoard()) {
+          <p>Loading...</p>
+        } @else {
+          @for (column of columns(); track column.id) {
+            <app-column
+              [column]="column"
+              [tickets]="ticketByColumnId()[column.id]"
+              (addTicket)="addTicket(column.id)"
+              (reorderTicket)="onReorderTicket($event)"
+            />
+          } @empty {
+            @if (hasError()) {
+              <p>An error occured</p>
+            } @else {
+              <p>No column</p>
+            }
+          }
         }
       </div>
     </div>
@@ -33,11 +41,29 @@ import { Column, DragDropLocation, Ticket } from '../models';
   `,
 })
 export class BoardPageComponent {
-  ticketByColumnId: Record<string, Ticket[]> = {};
-  columns = allBoard.columns;
+  private ticketList = signal<Ticket[]>([]);
+
+  columns = signal<Column[]>([]);
+  ticketByColumnId = computed(() => {
+    const columns = this.columns();
+    const tickets = this.ticketList();
+    return this.getTickestMap(columns, tickets);
+  });
+  isLoadingBoard = signal<boolean>(false);
+  hasError = signal<boolean>(false);
 
   constructor() {
-    this.ticketByColumnId = this.getTickestMap(allBoard.columns, allBoard.tickets);
+    this.isLoadingBoard.set(true);
+    this.hasError.set(false);
+    getData()
+      .finally(() => this.isLoadingBoard.set(false))
+      .then(
+        ({ columns, tickets }) => {
+          this.columns.set(columns);
+          this.ticketList.set(tickets);
+        },
+        (err) => this.hasError.set(true),
+      );
   }
 
   addTicket(columnId: string) {
@@ -53,17 +79,20 @@ export class BoardPageComponent {
       }
     }
 
-    const fromTicket = this.ticketByColumnId[from.columnId].find((t) => t.id === from.ticketId);
-    const toTicket = this.ticketByColumnId[to.columnId].find((t) => t.id === to.ticketId);
+    const ticketsMap = this.ticketByColumnId();
+    const ticketList = this.ticketList();
+
+    const fromTicket = ticketsMap[from.columnId].find((t) => t.id === from.ticketId);
+    const toTicket = ticketsMap[to.columnId].find((t) => t.id === to.ticketId);
     const newOrder = toTicket?.order || 1;
     if (!fromTicket) return;
     if (from.columnId !== to.columnId) {
-      shift(this.ticketByColumnId[from.columnId], false, fromTicket.order);
-      shift(this.ticketByColumnId[to.columnId], true, newOrder);
+      shift(ticketsMap[from.columnId], false, fromTicket.order);
+      shift(ticketsMap[to.columnId], true, newOrder);
     } else {
       const isGoingUp = fromTicket.order > newOrder;
       shift(
-        this.ticketByColumnId[to.columnId],
+        ticketsMap[to.columnId],
         isGoingUp,
         Math.min(fromTicket.order, newOrder),
         Math.max(fromTicket.order, newOrder),
@@ -73,7 +102,7 @@ export class BoardPageComponent {
     fromTicket.order = newOrder;
     fromTicket.columnId = to.columnId;
 
-    this.ticketByColumnId = this.getTickestMap(allBoard.columns, allBoard.tickets);
+    this.ticketList.set([...ticketList]);
   }
 
   private getTickestMap(columns: Column[], tickets: Ticket[]) {
