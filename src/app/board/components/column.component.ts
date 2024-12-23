@@ -1,15 +1,28 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CardComponent } from './card.component';
-import { Column, Ticket } from '../models';
+import { Column, DragDropPayload, Ticket } from '../models';
+import { DraggableDirective } from '../directives/draggable.directive';
+import { DroppableDirective } from '../directives/droppable.directive';
 
 @Component({
   selector: 'app-column',
-  imports: [CardComponent],
+  imports: [CardComponent, DraggableDirective, DroppableDirective],
   template: `
     <div id="wrapper">
       <h4>{{ column.title }}</h4>
-      <div id="list">
-        <app-card [ticket]="tickets[0]" />
+      <div id="list" appDroppable [columnId]="column.id" (dropItem)="reorderTicket.emit($event)">
+        @for (ticket of tickets; track ticket.id) {
+          <app-card
+            [ticket]="ticket"
+            appDraggable
+            [appDraggableData]="{
+              id: ticket.id,
+              columnId: column.id,
+            }"
+          />
+        } @empty {
+          <p>No tickets</p>
+        }
       </div>
       <button (click)="addTicket.emit()">Add Ticket</button>
     </div>
@@ -22,6 +35,7 @@ import { Column, Ticket } from '../models';
       background-color: #7e7e7e26;
       padding: 10px;
       border-radius: 5px;
+      min-width: 222px;
 
       h4 {
         margin: 0;
@@ -62,4 +76,5 @@ export class ColumnComponent {
   @Input({ required: true }) column!: Column;
   @Input({ required: true }) tickets!: Ticket[];
   @Output() addTicket = new EventEmitter<void>();
+  @Output() reorderTicket = new EventEmitter<DragDropPayload>();
 }
