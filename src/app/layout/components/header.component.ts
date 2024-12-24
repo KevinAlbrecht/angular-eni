@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UserCardComponent } from './user-card.component';
 import { NavMenuComponent } from './nav-menu.component';
+import { AuthService } from '../../identity/auth.service';
 
 @Component({
   selector: 'app-header',
   imports: [UserCardComponent, NavMenuComponent],
   template: `
     <div id="wrapper">
-      <app-nav-menu [isAdmin]="isUserAdmin" />
-      <app-user-card (toggleAuth)="onToggleAuth()" />
+      <app-nav-menu [isAdmin]="isUserAdmin()" />
+      <app-user-card (toggleAuth)="onToggleAuth()" [username]="userName()" />
     </div>
   `,
   styles: `
@@ -25,6 +26,16 @@ import { NavMenuComponent } from './nav-menu.component';
   `,
 })
 export class HeaderComponent {
-  isUserAdmin = false;
-  onToggleAuth() {}
+  private authService = inject(AuthService);
+
+  isUserAdmin = this.authService.isAdmin;
+  userName = this.authService.username;
+
+  onToggleAuth() {
+    if (this.authService.isUserConnected()) {
+      this.authService.logout();
+    } else {
+      this.authService.login('user@test.com', '1234').subscribe();
+    }
+  }
 }

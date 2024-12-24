@@ -1,33 +1,39 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ColumnComponent } from './column.component';
-import { getData } from '../data';
 import { Column, DragDropLocation, Ticket } from '../models';
+import { BoardService } from '../services/board.service';
+import { tap } from 'rxjs';
+import { AuthService } from '../../identity/auth.service';
 
 @Component({
   selector: 'app-board-page',
   imports: [ColumnComponent],
   template: `
     <div id="wrapper">
-      <div id="columns-wrapper">
-        @if (isLoadingBoard()) {
-          <p>Loading...</p>
-        } @else {
-          @for (column of columns(); track column.id) {
-            <app-column
-              [column]="column"
-              [tickets]="ticketByColumnId()[column.id]"
-              (addTicket)="addTicket(column.id)"
-              (reorderTicket)="onReorderTicket($event)"
-            />
-          } @empty {
-            @if (hasError()) {
-              <p>An error occured</p>
-            } @else {
-              <p>No column</p>
+      @if (!isUserConnected()) {
+        <span>Please log in</span>
+      } @else {
+        <div id="columns-wrapper">
+          @if (isLoadingBoard()) {
+            <p>Loading...</p>
+          } @else {
+            @for (column of columns(); track column.id) {
+              <app-column
+                [column]="column"
+                [tickets]="ticketByColumnId()[column.id]"
+                (addTicket)="addTicket(column.id)"
+                (reorderTicket)="onReorderTicket($event)"
+              />
+            } @empty {
+              @if (hasError()) {
+                <p>An error occured</p>
+              } @else {
+                <p>No column</p>
+              }
             }
           }
-        }
-      </div>
+        </div>
+      }
     </div>
   `,
   styles: `
@@ -41,36 +47,68 @@ import { Column, DragDropLocation, Ticket } from '../models';
   `,
 })
 export class BoardPageComponent {
+  private boardService = inject(BoardService);
+  private authService = inject(AuthService);
   private ticketList = signal<Ticket[]>([]);
 
   columns = signal<Column[]>([]);
   ticketByColumnId = computed(() => {
     const columns = this.columns();
     const tickets = this.ticketList();
-    return this.getTickestMap(columns, tickets);
+    return this.getTicketstMap(columns, tickets);
   });
   isLoadingBoard = signal<boolean>(false);
   hasError = signal<boolean>(false);
+  isUserConnected = this.authService.isUserConnected;
 
   constructor() {
-    this.isLoadingBoard.set(true);
-    this.hasError.set(false);
-    getData()
-      .finally(() => this.isLoadingBoard.set(false))
-      .then(
-        ({ columns, tickets }) => {
-          this.columns.set(columns);
-          this.ticketList.set(tickets);
-        },
-        (err) => this.hasError.set(true),
-      );
+    effect(() => {
+      const isConnected = this.authService.isUserConnected();
+      if (isConnected) {
+        this.loadBoard();
+      }
+    });
   }
 
   addTicket(columnId: string) {
-    console.log(`add new ticket to column ${columnId} !`);
+    this.boardService.createTicket(columnId).subscribe({
+      next: ({ createdTicket }) => {
+        this.ticketList.update((list) => {
+          const newList = [...list, createdTicket];
+          return newList;
+        });
+        this.hasError.set(false);
+      },
+      error: (err) => this.hasError.set(true),
+    });
   }
 
   onReorderTicket([from, to]: [DragDropLocation, DragDropLocation]) {
+    this.localReorderTicket([from, to]);
+    this.boardService.reorderTicket(from, to).subscribe({
+      next: ({ tickets }) => {
+        this.ticketList.set(tickets);
+      },
+    });
+  }
+
+  private loadBoard() {
+    this.isLoadingBoard.set(true);
+    this.hasError.set(false);
+    this.boardService
+      .getBoard()
+      .pipe(tap({ finalize: () => this.isLoadingBoard.set(false) }))
+      .subscribe({
+        next: ({ columns, tickets }) => {
+          this.columns.set(columns);
+          this.ticketList.set(tickets);
+          this.hasError.set(false);
+        },
+        error: (err) => this.hasError.set(true),
+      });
+  }
+
+  private localReorderTicket([from, to]: [DragDropLocation, DragDropLocation]) {
     function shift(arr: Ticket[], isUp: boolean, fromId: number = 0, toId: number = arr.length) {
       for (let ticket of arr) {
         if (ticket.order >= fromId && ticket.order <= toId) {
@@ -105,7 +143,7 @@ export class BoardPageComponent {
     this.ticketList.set([...ticketList]);
   }
 
-  private getTickestMap(columns: Column[], tickets: Ticket[]) {
+  private getTicketstMap(columns: Column[], tickets: Ticket[]) {
     const draftMap: Record<string, Ticket[]> = {};
 
     for (let ticket of tickets) {
