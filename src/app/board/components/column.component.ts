@@ -3,11 +3,12 @@ import { CardComponent } from './card.component';
 import { Column, DragDropPayload, Ticket } from '../models';
 import { DraggableDirective } from '../directives/draggable.directive';
 import { DroppableDirective } from '../directives/droppable.directive';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-column',
-  imports: [CardComponent, DraggableDirective, DroppableDirective],
-  template: `
+  imports: [CardComponent, DraggableDirective, DroppableDirective, RouterLink],
+    template: `
     <div id="wrapper">
       <h4>{{ column().title }}</h4>
       <div id="list" appDroppable [columnId]="column().id" (dropItem)="reorderTicket.emit($event)">
@@ -24,7 +25,7 @@ import { DroppableDirective } from '../directives/droppable.directive';
           <p>No tickets</p>
         }
       </div>
-      <button (click)="addTicket.emit()">Add Ticket</button>
+      <a routerLink="../ticket/" [queryParams]="{ columnId: column().id }"> Add Ticket </a>
     </div>
   `,
   styles: `
@@ -50,7 +51,7 @@ import { DroppableDirective } from '../directives/droppable.directive';
         gap: 15px;
       }
 
-      button {
+      a{
         margin-top: 10px;
         border: none;
         outline: none;
@@ -58,6 +59,9 @@ import { DroppableDirective } from '../directives/droppable.directive';
         cursor: pointer;
         background-color: white;
         border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        color: inherit;
       }
 
       [appDraggable] {

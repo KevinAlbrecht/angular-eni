@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { CreateTicketResponse, DragDropLocation, GetBoardResponse } from '../models';
+import { TicketResponse, DragDropLocation, GetBoardResponse, Ticket, TicketEditionCreation } from '../models';
 import { map } from 'rxjs';
 
 @Injectable({
@@ -23,13 +23,19 @@ export class BoardService {
       .pipe(map((r) => r.board));
   }
 
-  createTicket(columnId: string) {
-    return this.http.post<CreateTicketResponse>(`/api/board/ticket/${columnId}`, {
-      ticket: {
-        description: '',
-        title: 'New task',
-        type: 'task',
-      },
+  createTicket(modele: TicketEditionCreation, columnId: string) {
+    return this.http.post<TicketResponse>(`/api/board/ticket/${columnId}`, {
+      ticket: modele,
     });
+  }
+
+  editTicket(modele: TicketEditionCreation) {
+    return this.http.patch<TicketResponse>(`/api/board/ticket`, {
+      ticket: modele,
+    });
+  }
+
+  getTicketById(id: string) {
+    return this.http.get<TicketResponse>(`/api/board/ticket/${id}`).pipe(map((r) => r.ticket));
   }
 }

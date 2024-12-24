@@ -2,6 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { AuthResponse, User } from './models';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 const AUTH_TOKEN_KEY = 'auth_token';
 
@@ -10,6 +11,7 @@ const AUTH_TOKEN_KEY = 'auth_token';
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private router = inject(Router);
   private _user = signal<User | null>(null);
 
   user = this._user.asReadonly();
@@ -44,6 +46,7 @@ export class AuthService {
       next: () => {
         this._user.set(null);
         localStorage.removeItem(AUTH_TOKEN_KEY);
+        this.router.navigate(['']);
       },
     });
   }

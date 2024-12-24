@@ -10,7 +10,9 @@ export type Ticket = {
   order: number;
   columnId: string;
 };
-export type TicketEditionCreation = Omit<Ticket, 'id' | 'order'> & { id: string | undefined };
+export type TicketEditionCreation = Omit<Ticket, 'id' | 'order'> & {
+  id: string | undefined;
+};
 
 export type Column = {
   id: string;
@@ -34,4 +36,4 @@ export type DragDropLocation = {
 export type DragDropPayload = [DragDropLocation, DragDropLocation];
 
 export type GetBoardResponse = { board: Board };
-export type CreateTicketResponse = { createdTicket: Ticket };
+export type TicketResponse = { ticket: Ticket };

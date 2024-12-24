@@ -214,7 +214,35 @@ export default function initServer() {
           ...body.ticket,
         });
 
-        return new Response(200, {}, { createdTicket });
+        return new Response(200, {}, { ticket: createdTicket });
+      });
+
+      this.patch('/board/ticket', (schema, request) => {
+        const user = checkAuthToken(request);
+        if (user === null) {
+          return new Response(401, {}, { error: 'Unauthorized' });
+        }
+
+        const body = JSON.parse(request.requestBody);
+
+        const updatedTicket = schema.db['tickets'].update(body.ticket.id, body.ticket);
+
+        return new Response(200, {}, { ticket: updatedTicket });
+      });
+
+      this.get('/board/ticket/:id', (schema, request) => {
+        const user = checkAuthToken(request);
+        if (user === null) {
+          return new Response(401, {}, { error: 'Unauthorized' });
+        }
+
+        const ticketId = request.params['id'];
+
+        const ticket = schema.db['tickets'].find(ticketId);
+        if (!ticket) {
+          return new Response(404, {}, { error: 'Not found' });
+        }
+        return new Response(200, {}, { ticket });
       });
 
       this.post(

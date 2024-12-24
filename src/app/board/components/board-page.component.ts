@@ -13,26 +13,22 @@ import { AuthService } from '../../identity/auth.service';
       @if (!isUserConnected()) {
         <span>Please log in</span>
       } @else {
-        <div id="columns-wrapper">
-          @if (isLoadingBoard()) {
-            <p>Loading...</p>
-          } @else {
-            @for (column of columns(); track column.id) {
-              <app-column
-                [column]="column"
-                [tickets]="ticketByColumnId()[column.id]"
-                (addTicket)="addTicket(column.id)"
-                (reorderTicket)="onReorderTicket($event)"
-              />
-            } @empty {
-              @if (hasError()) {
-                <p>An error occured</p>
-              } @else {
-                <p>No column</p>
-              }
-            }
-          }
-        </div>
+
+      <div id="columns-wrapper">
+        @if(isLoadingBoard()){
+        <p>Loading...</p>
+        } @else { @for(column of columns(); track column.id){
+        <app-column
+          [column]="column"
+          [tickets]="ticketByColumnId()[column.id]"
+          (reorderTicket)="onReorderTicket($event)"
+        />
+        } @empty{ @if(hasError()){
+        <p>An error occured</p>
+        } @else{
+        <p>No column</p>
+        } } }
+      </div>
       }
     </div>
   `,
@@ -67,19 +63,6 @@ export class BoardPageComponent {
       if (isConnected) {
         this.loadBoard();
       }
-    });
-  }
-
-  addTicket(columnId: string) {
-    this.boardService.createTicket(columnId).subscribe({
-      next: ({ createdTicket }) => {
-        this.ticketList.update((list) => {
-          const newList = [...list, createdTicket];
-          return newList;
-        });
-        this.hasError.set(false);
-      },
-      error: (err) => this.hasError.set(true),
     });
   }
 

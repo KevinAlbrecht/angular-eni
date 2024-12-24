@@ -1,17 +1,20 @@
 import { Component, input } from '@angular/core';
 import { Ticket } from '../models';
 import { TitleLimiterPipe } from '../pipes/title-limiter.pipe';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-card',
-  imports: [TitleLimiterPipe],
+  imports: [TitleLimiterPipe, RouterLink],
   template: `
-    <div id="wrapper" [class]="ticket().type">
-      <h4>
-        {{ ticket().title | titleLimiter }}
-      </h4>
-      <span>{{ ticket().assignee || 'unassigned' }}</span>
-    </div>
+    <a [routerLink]="['/ticket/', ticket().id]" draggable="false">
+      <div id="wrapper" [class]="ticket().type">
+        <h4>
+          {{ ticket().title | titleLimiter }}
+        </h4>
+        <span>{{ ticket().assignee || 'unassigned' }}</span>
+      </div>
+    </a>
   `,
   styles: `
     #wrapper {

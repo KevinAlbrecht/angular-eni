@@ -1,12 +1,13 @@
 import { Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-nav-menu',
-  imports: [],
+  imports: [RouterLink],
   template: `
     <div>
-      <a>Board</a>
-      <a [class]="isAdmin() ? '' : 'disabled'">Admin</a>
+      <a routerLink="">Board</a>
+      <a [routerLink]="isAdmin() ? '/admin' : undefined" [class]="isAdmin() ? '' : 'disabled'">Admin</a>
     </div>
   `,
   styles: `
