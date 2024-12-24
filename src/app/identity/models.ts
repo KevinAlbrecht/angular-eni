@@ -7,3 +7,8 @@ export type AuthResponse = {
   user: User;
   authToken: string;
 };
+
+export type LoginFormValue = {
+  email: string;
+  password: string;
+};

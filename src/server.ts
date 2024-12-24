@@ -26,9 +26,6 @@ function shiftTickets(schema: Schema<any>, whereFn: (t: any) => any, isShift: bo
 }
 
 function checkAuthToken(request: Request) {
-  // Todo: Remove on chapter 8
-  return {};
-
   const auth = request.requestHeaders['Authorization'];
   if (!auth) {
     return null;
