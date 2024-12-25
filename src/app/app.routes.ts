@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { BoardPageComponent } from './board/components/board-page.component';
-import { authGuard } from './identity/guards/auth.guard';
-import { TicketDetailsPageComponent } from './board/components/ticket-details-page.component';
+import { BoardPageComponent } from './board/features/board-page.component';
+import { authGuard } from './identity/auth.guard';
+import { TicketDetailsPageComponent } from './board/features/ticket-details-page.component';
 
 export const routes: Routes = [
   {

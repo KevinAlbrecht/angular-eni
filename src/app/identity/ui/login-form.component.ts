@@ -1,7 +1,7 @@
 import { Component, effect, inject, input, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginFormValue } from '../models';
-import { FormErrorsMessagePipe } from '../../shared/pipes/form-errors-message.pipe';
+import { FormErrorsMessagePipe } from '../../shared/ui/form-errors-message.pipe';
 
 @Component({
   selector: 'app-login-form',
@@ -17,7 +17,7 @@ import { FormErrorsMessagePipe } from '../../shared/pipes/form-errors-message.pi
             <input formControlName="email" type="email" />
           </div>
           <span class="error">{{
-            getControlErrors('email') | formErrorsMessage : ERROR_MESSAGES
+            getControlErrors('email') | formErrorsMessage: ERROR_MESSAGES
           }}</span>
         </div>
         <div class="control-wrapper">
@@ -26,51 +26,52 @@ import { FormErrorsMessagePipe } from '../../shared/pipes/form-errors-message.pi
             <input formControlName="password" type="password" />
           </div>
           <span class="error">{{
-            getControlErrors('password') | formErrorsMessage : ERROR_MESSAGES
+            getControlErrors('password') | formErrorsMessage: ERROR_MESSAGES
           }}</span>
         </div>
         <div class="actions">
           <button type="submit" [disabled]="isLoading() || form.invalid">Log in</button>
           <button type="button" [disabled]="isLoading()" (click)="onCancel()">Cancel</button>
         </div>
-        @if(error(); as errorMessage){
-        <p class="error">{{ errorMessage }}</p>
+        @if (error(); as errorMessage) {
+          <p class="error">{{ errorMessage }}</p>
         }
       </form>
     </div>
   `,
   styles: `
-#wrapper {
- min-height: 200px;
- form{
-   display: flex;
-   flex-direction: column;
-   gap: 20px;
-   align-items: center;
-   margin-top: 50px;
-   input.ng-touched.ng-invalid {
-     border: 1px solid red;
-   }
-   .control-wrapper{
-     width:250px;
-     .field{
-      display: flex;
-      justify-content: space-between;
-     }
-     .error{
-       color:red;
-     }
-   }
-   .actions{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    width: 100%;
-    gap: 50px;
-   }
- }
-}`,
+    #wrapper {
+      min-height: 200px;
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        margin-top: 50px;
+        input.ng-touched.ng-invalid {
+          border: 1px solid red;
+        }
+        .control-wrapper {
+          width: 250px;
+          .field {
+            display: flex;
+            justify-content: space-between;
+          }
+          .error {
+            color: red;
+          }
+        }
+        .actions {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: row;
+          width: 100%;
+          gap: 50px;
+        }
+      }
+    }
+  `,
 })
 export class LoginFormComponent {
   private fb = inject(FormBuilder);

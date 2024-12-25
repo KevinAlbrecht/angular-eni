@@ -157,7 +157,7 @@ export default function initServer() {
           shiftTickets(
             schema,
             (t: any) => t.columnId === fromTicket.columnId && t.order >= fromTicket.order,
-            false,
+            false
           );
         } else {
           const toTicket = schema.db['tickets'].find(to.ticketId);
@@ -169,11 +169,11 @@ export default function initServer() {
             shiftTickets(
               schema,
               (t: any) => t.columnId === fromTicket.columnId && t.order >= fromTicket.order,
-              false,
+              false
             );
             shiftTickets(
               schema,
-              (t: any) => t.columnId === toTicket.columnId && t.order >= toTicket.order,
+              (t: any) => t.columnId === toTicket.columnId && t.order >= toTicket.order
             );
           } else {
             const predicate = isDesc
@@ -248,7 +248,6 @@ export default function initServer() {
       this.post(
         '/login',
         (schema, request) => {
-          // return new Response(400, {}, 'Identifiants incorrects');
           const body = JSON.parse(request.requestBody);
           const expiry = Date.now() + 1000 * 60 * 60;
 
@@ -264,7 +263,7 @@ export default function initServer() {
               {
                 user: { username: 'Marc', isAdmin: true },
                 authToken: HARDCODED_TOKENS.admin,
-              },
+              }
             );
           } else if (body.email === 'user@test.com' && body.password === '1234') {
             userSessions[HARDCODED_TOKENS.user] = {
@@ -278,13 +277,13 @@ export default function initServer() {
               {
                 user: { username: 'John', isAdmin: false },
                 authToken: HARDCODED_TOKENS.user,
-              },
+              }
             );
           }
 
           return new Response(401, {}, { error: 'Unauthorized' });
         },
-        { timing: 1000 },
+        { timing: 1000 }
       );
 
       this.post('/logout', (schema, request) => {

@@ -1,12 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { TicketResponse, DragDropLocation, GetBoardResponse, Ticket, TicketEditionCreation } from '../models';
+import {
+  TicketResponse,
+  DragDropLocation,
+  GetBoardResponse,
+  TicketEditionCreation,
+} from '../models';
 import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BoardService {
+export class BoardApiService {
   private http = inject(HttpClient);
 
   constructor() {}

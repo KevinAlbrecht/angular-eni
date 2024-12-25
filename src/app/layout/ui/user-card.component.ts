@@ -35,7 +35,7 @@ import { Component, computed, input, output } from '@angular/core';
   `,
 })
 export class UserCardComponent {
-  username = input<string>('');
+  username = input<string | null>('');
   toggleAuth = output<void>();
   isConnected = computed(() => !!this.username());
 }

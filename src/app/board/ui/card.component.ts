@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { Ticket } from '../models';
-import { TitleLimiterPipe } from '../pipes/title-limiter.pipe';
+import { TitleLimiterPipe } from './title-limiter.pipe';
 import { RouterLink } from '@angular/router';
 
 @Component({

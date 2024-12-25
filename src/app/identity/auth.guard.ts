@@ -1,17 +1,17 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, RedirectCommand, Router } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { AuthStore } from './data/auth.store';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const { isUserConnected, isAdmin } = inject(AuthService);
+  const { isUserConnected, isUserAdmin } = inject(AuthStore);
   const doesRequireAdmin = route.data['requiresAdmin'] ?? false;
 
   if (!isUserConnected()) {
     return new RedirectCommand(router.parseUrl(''));
   }
 
-  if (doesRequireAdmin && !isAdmin()) {
+  if (doesRequireAdmin && !isUserAdmin()) {
     return new RedirectCommand(router.parseUrl(''));
   }
   return true;

@@ -7,7 +7,9 @@ import { RouterLink } from '@angular/router';
   template: `
     <div>
       <a routerLink="">Board</a>
-      <a [routerLink]="isAdmin() ? '/admin' : undefined" [class]="isAdmin() ? '' : 'disabled'">Admin</a>
+      <a [routerLink]="isAdmin() ? '/admin' : undefined" [class]="isAdmin() ? '' : 'disabled'"
+        >Admin</a
+      >
     </div>
   `,
   styles: `

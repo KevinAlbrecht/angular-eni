@@ -1,14 +1,14 @@
 import { Component, input, output } from '@angular/core';
 import { CardComponent } from './card.component';
 import { Column, DragDropPayload, Ticket } from '../models';
-import { DraggableDirective } from '../directives/draggable.directive';
-import { DroppableDirective } from '../directives/droppable.directive';
+import { DraggableDirective } from './draggable.directive';
+import { DroppableDirective } from './droppable.directive';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-column',
   imports: [CardComponent, DraggableDirective, DroppableDirective, RouterLink],
-    template: `
+  template: `
     <div id="wrapper">
       <h4>{{ column().title }}</h4>
       <div id="list" appDroppable [columnId]="column().id" (dropItem)="reorderTicket.emit($event)">
@@ -51,7 +51,7 @@ import { RouterLink } from '@angular/router';
         gap: 15px;
       }
 
-      a{
+      a {
         margin-top: 10px;
         border: none;
         outline: none;
