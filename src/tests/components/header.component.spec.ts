@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
-import { HeaderComponent } from '../../app/layout/features/header.component';
-import { AuthStore } from '../../app/identity/data/auth.store';
 import { By } from '@angular/platform-browser';
-import { AuthStoreType, getAuthStoreSpyObj } from '../helper';
 import { provideRouter } from '@angular/router';
+
+import { AuthStoreType, getAuthStoreSpyObj } from '../helper';
+
+import { AuthStore } from '~identity/data/auth.store';
+import { HeaderComponent } from '~layout/features/header.component';
 
 describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;

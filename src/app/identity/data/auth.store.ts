@@ -1,3 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { tapResponse } from '@ngrx/operators';
 import {
   signalStore,
   withState,
@@ -7,13 +11,11 @@ import {
   withComputed,
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { tapResponse } from '@ngrx/operators';
-import { computed, inject } from '@angular/core';
-import { map, of, pipe, switchMap, tap } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
+
 import { AuthApiService } from './auth-api.service';
-import { User } from '../models';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+
+import { User } from '~identity/models';
 
 const AUTH_TOKEN_KEY = 'auth_token';
 

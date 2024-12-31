@@ -1,9 +1,10 @@
 import { Component, OnDestroy, computed, effect, inject, input, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TICKET_TYPES, TicketEditionCreation, TicketType } from '../models';
-import { FormErrorsMessagePipe } from '../../shared/ui/form-errors-message.pipe';
-import { BoardStore } from '../data/board.store';
 import { RouterLink } from '@angular/router';
+
+import { BoardStore } from '~board/data/board.store';
+import { TICKET_TYPES, TicketType } from '~board/models';
+import { FormErrorsMessagePipe } from '~shared/ui/form-errors-message.pipe';
 
 @Component({
   selector: 'app-ticket-details-page',
@@ -201,7 +202,10 @@ export class TicketDetailsPageComponent implements OnDestroy {
 
     this.ticketId()
       ? this.boardStore.editTicket(value)
-      : this.boardStore.createTicket({ ticket: value, columnId: this.columnId() });
+      : this.boardStore.createTicket({
+          ticket: value,
+          columnId: this.columnId(),
+        });
   }
 
   onCancel() {

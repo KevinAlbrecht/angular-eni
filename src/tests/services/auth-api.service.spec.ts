@@ -1,7 +1,8 @@
+import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { AuthApiService } from '../../app/identity/data/auth-api.service';
-import { provideHttpClient } from '@angular/common/http';
+
+import { AuthApiService } from '~identity/data/auth-api.service';
 
 describe('AuthApiService', () => {
   let service: AuthApiService;

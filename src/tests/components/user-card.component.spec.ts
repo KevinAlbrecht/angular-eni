@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserCardComponent } from '../../app/layout/ui/user-card.component';
 import { By } from '@angular/platform-browser';
+
+import { UserCardComponent } from '~layout/ui/user-card.component';
 
 describe('UserCardComponent', () => {
   let component: UserCardComponent;

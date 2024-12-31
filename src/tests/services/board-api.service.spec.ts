@@ -1,9 +1,11 @@
+import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { BoardApiService } from '../../app/board/data/board-api.service';
-import { GetBoardResponse, DragDropLocation, TicketEditionCreation } from '../../app/board/models';
+
 import { getBoardWithMultipleColumns, getCreationTicket, getEditionTicket } from '../mocks/board';
+
+import { BoardApiService } from '~board/data/board-api.service';
+import { GetBoardResponse, DragDropLocation, TicketEditionCreation } from '~board/models';
 
 describe('BoardApiService', () => {
   let service: BoardApiService;
@@ -20,7 +22,9 @@ describe('BoardApiService', () => {
     httpMock = TestBed.inject(HttpTestingController);
     service = TestBed.inject(BoardApiService);
 
-    getBoardResponse = { board: getBoardWithMultipleColumns() } as GetBoardResponse;
+    getBoardResponse = {
+      board: getBoardWithMultipleColumns(),
+    } as GetBoardResponse;
     creationTicket = getCreationTicket();
     editionTicket = getEditionTicket();
   });

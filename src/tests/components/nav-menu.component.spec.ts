@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NavMenuComponent } from '../../app/layout/ui/nav-menu.component';
 import { provideRouter } from '@angular/router';
+
+import { NavMenuComponent } from '~layout/ui/nav-menu.component';
 
 describe('NavMenuComponent', () => {
   let fixture: ComponentFixture<NavMenuComponent>;

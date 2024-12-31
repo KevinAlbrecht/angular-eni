@@ -1,8 +1,9 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { AuthApiService } from '../../app/identity/data/auth-api.service';
-import { delay, of, throwError } from 'rxjs';
-import { AuthStore } from '../../app/identity/data/auth.store';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { delay, of, throwError } from 'rxjs';
+
+import { AuthApiService } from '~identity/data/auth-api.service';
+import { AuthStore } from '~identity/data/auth.store';
 
 describe('AuthApiService', () => {
   let serviceSpy: jasmine.SpyObj<AuthApiService>;

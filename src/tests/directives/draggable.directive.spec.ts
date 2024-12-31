@@ -1,8 +1,9 @@
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DraggableDirective } from '../../app/board/ui/draggable.directive';
-import { Component } from '@angular/core';
-import { REORDER_DROP_DATATYPE } from '../../app/board/constants';
+
+import { REORDER_DROP_DATATYPE } from '~board/constants';
+import { DraggableDirective } from '~board/ui/draggable.directive';
 
 @Component({
   imports: [DraggableDirective],
@@ -14,7 +15,6 @@ class TestComponent {
 
 describe('DraggableDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
-  let testComponent: TestComponent;
   let directiveElement: HTMLElement;
 
   beforeEach(async () => {
@@ -23,7 +23,6 @@ describe('DraggableDirective', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
-    testComponent = fixture.componentInstance;
     directiveElement = fixture.debugElement.query(By.directive(DraggableDirective)).nativeElement;
   });
 
@@ -43,7 +42,9 @@ describe('DraggableDirective', () => {
 
   it('should set the appDraggableData in dataTransfer when dragstart event is triggered', () => {
     const appDraggableData = { id: '1', columnId: '2' };
-    const event = new DragEvent('dragstart', { dataTransfer: new DataTransfer() });
+    const event = new DragEvent('dragstart', {
+      dataTransfer: new DataTransfer(),
+    });
 
     fixture.detectChanges();
     directiveElement.dispatchEvent(event);

@@ -1,8 +1,9 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
-import { ColumnComponent } from '../ui/column.component';
-import { DragDropLocation, Ticket } from '../models';
-import { BoardStore } from '../data/board.store';
-import { AuthStore } from '../../identity/data/auth.store';
+import { Component, computed, effect, inject } from '@angular/core';
+
+import { BoardStore } from '~board/data/board.store';
+import { DragDropLocation } from '~board/models';
+import { ColumnComponent } from '~board/ui/column.component';
+import { AuthStore } from '~identity/data/auth.store';
 
 @Component({
   selector: 'app-board-page',

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+
 import { login } from '../helpers';
 
 test.describe('disconnected', () => {
@@ -24,7 +25,7 @@ test.describe('connected', () => {
     const title = column.locator('h4').first();
     const addTicketLink = column.locator('a', { hasText: 'Add ticket' });
 
-    await expect(title).toHaveText('To Do');
+    await expect(title).toHaveText('Column 1');
     expect(addTicketLink).toBeTruthy();
   });
 

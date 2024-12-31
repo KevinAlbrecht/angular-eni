@@ -1,9 +1,11 @@
 import { Component, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
 import { CardComponent } from './card.component';
-import { Column, DragDropPayload, Ticket } from '../models';
 import { DraggableDirective } from './draggable.directive';
 import { DroppableDirective } from './droppable.directive';
-import { RouterLink } from '@angular/router';
+
+import { Column, DragDropPayload, Ticket } from '~board/models';
 
 @Component({
   selector: 'app-column',

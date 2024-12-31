@@ -1,10 +1,8 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { AuthResponse, User } from '../models';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
 
-const AUTH_TOKEN_KEY = 'auth_token';
+import { environment } from '~env/environment';
+import { AuthResponse } from '~identity/models';
 
 @Injectable({
   providedIn: 'root',
@@ -12,16 +10,14 @@ const AUTH_TOKEN_KEY = 'auth_token';
 export class AuthApiService {
   private http = inject(HttpClient);
 
-  constructor() {}
-
   login(email: string, password: string) {
-    return this.http.post<AuthResponse>('/api/login', {
+    return this.http.post<AuthResponse>(`${environment.apiBaseUrl}api/login`, {
       email,
       password,
     });
   }
 
   logout() {
-    return this.http.post('/api/logout', {});
+    return this.http.post(`${environment.apiBaseUrl}api/logout`, {});
   }
 }

@@ -1,10 +1,10 @@
-import { Component, inject, linkedSignal, signal } from '@angular/core';
-import { UserCardComponent } from '../ui/user-card.component';
-import { NavMenuComponent } from '../ui/nav-menu.component';
-import { AuthStore } from '../../identity/data/auth.store';
-import { LoginFormValue } from '../../identity/models';
-import { tap } from 'rxjs';
-import { LoginFormComponent } from '../../identity/ui/login-form.component';
+import { Component, inject, linkedSignal } from '@angular/core';
+
+import { AuthStore } from '~identity/data/auth.store';
+import { LoginFormValue } from '~identity/models';
+import { LoginFormComponent } from '~identity/ui/login-form.component';
+import { NavMenuComponent } from '~layout/ui/nav-menu.component';
+import { UserCardComponent } from '~layout/ui/user-card.component';
 
 @Component({
   selector: 'app-header',

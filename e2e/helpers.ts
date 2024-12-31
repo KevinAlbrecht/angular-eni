@@ -1,6 +1,8 @@
 import { Page } from '@playwright/test';
 
-export async function login(page: Page, emailaddress: string, password: string) {
+import { getBoardWithMultipleColumns } from './board';
+
+export async function login(page: Page, emailaddress: string, password: string, isAdmin = false) {
   const loginButton = page.getByTestId('toggle-log-button');
   const email = page.getByLabel('Email :');
   const pwd = page.getByLabel('Password :');
@@ -13,7 +15,35 @@ export async function login(page: Page, emailaddress: string, password: string) 
 
   await email.fill(emailaddress);
   await pwd.fill(password);
-  await submit.click();
+
+  await Promise.all([
+    submit.click(),
+    page.route('**/api/login', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          token: isAdmin ? 'admin-fake-token' : 'user-fake-token',
+          user: { username: 'John', isAdmin },
+        }),
+      });
+    }),
+    page.waitForResponse('**/api/login'),
+    page.route('**/api/board', (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          board: getBoardWithMultipleColumns(),
+        }),
+      });
+    }),
+    page.waitForResponse('**/api/board'),
+  ]);
 
   await modalWrapper.waitFor({ state: 'detached' });
+}
+
+export function delayPromise(action: Promise<unknown>, ms: number): Promise<unknown> {
+  return Promise.all([new Promise((resolve) => setTimeout(resolve, ms)), action]);
 }

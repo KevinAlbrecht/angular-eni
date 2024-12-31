@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+
 import { login } from '../helpers';
 
 test.describe('user-card', () => {
@@ -27,7 +28,7 @@ test.describe('user-card', () => {
   });
 
   test('can navigate to admin page as admin', async ({ page }) => {
-    await login(page, 'admin@test.com', '1234');
+    await login(page, 'admin@test.com', '1234', true);
     const adminLink = page.locator('a', { hasText: 'Admin' });
 
     await expect(adminLink).toHaveAttribute('href', '/admin');

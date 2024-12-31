@@ -3,7 +3,7 @@ import { Column, DragDropLocation, Ticket } from './models';
 export function getTicketstMap(columns: Column[], tickets: Ticket[]) {
   const draftMap: Record<string, Ticket[]> = {};
 
-  for (let ticket of tickets) {
+  for (const ticket of tickets) {
     if (!draftMap[ticket.columnId]) {
       draftMap[ticket.columnId] = [];
     }
@@ -11,7 +11,7 @@ export function getTicketstMap(columns: Column[], tickets: Ticket[]) {
     draftMap[columnId].push(ticket);
   }
 
-  for (let { id } of columns) {
+  for (const { id } of columns) {
     const currentColumn = draftMap[id];
     if (!currentColumn) {
       draftMap[id] = [];
@@ -27,8 +27,8 @@ export function reorder(
   ticketList: Ticket[],
   columns: Column[]
 ) {
-  function shift(arr: Ticket[], isUp: boolean, fromId: number = 0, toId: number = arr.length) {
-    for (let ticket of arr) {
+  function shift(arr: Ticket[], isUp: boolean, fromId = 0, toId: number = arr.length) {
+    for (const ticket of arr) {
       if (ticket.order >= fromId && ticket.order <= toId) {
         ticket.order += isUp ? 1 : -1;
       }

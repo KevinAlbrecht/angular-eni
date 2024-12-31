@@ -1,6 +1,7 @@
-import { Board, DragDropLocation, Ticket } from '../app/board/models';
-import { getTicketstMap, reorder } from '../app/board/helpers';
 import { getBoardWithMultipleColumns, getBoardWithOneColumn } from './mocks/board';
+
+import { getTicketstMap, reorder } from '~board/helpers';
+import { Board, DragDropLocation, Ticket } from '~board/models';
 
 describe('helpers', () => {
   let boardWithOneColumn: Board;

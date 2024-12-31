@@ -1,8 +1,10 @@
-import { Type, WritableSignal, signal } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { WritableSignal, signal } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
-import { LoginFormValue, User } from '../app/identity/models';
-import { Column, DragDropLocation, Ticket, TicketEditionCreation } from '../app/board/models';
+
+import { Column, DragDropLocation, Ticket, TicketEditionCreation } from '~board/models';
+import { User, LoginFormValue } from '~identity/models';
 
 export function fillForm(
   form: FormGroup<any>,
@@ -95,7 +97,7 @@ export function getBoardStoreSpyObj(
   return mockStore;
 }
 
-export function setInputs(fixture: ComponentFixture<any>, inputs: Record<string, any>) {
+export function setInputs(fixture: ComponentFixture<unknown>, inputs: Record<string, unknown>) {
   Object.entries(inputs).forEach(([inputName, value]) => {
     fixture.componentRef.setInput(inputName, value);
   });

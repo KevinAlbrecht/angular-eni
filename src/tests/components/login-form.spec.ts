@@ -1,7 +1,9 @@
-import { ValidationErrors } from '@angular/forms';
-import { LoginFormComponent } from '../../app/identity/ui/login-form.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ValidationErrors } from '@angular/forms';
+
 import { fillForm } from '../helper';
+
+import { LoginFormComponent } from '~identity/ui/login-form.component';
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;

@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Model, createServer, Response, Request, hasMany, belongsTo } from 'miragejs';
-import { DragDropLocation } from './app/board/models';
 import type Schema from 'miragejs/orm/schema';
 
+import { DragDropLocation } from '~board/models';
+
 let server;
-let userSessions: Record<string, { expires: number; isAdmin: boolean }> = {};
+const userSessions: Record<string, { expires: number; isAdmin: boolean }> = {};
 
 const HARDCODED_TOKENS = {
   admin: 'admin-fake-token',
@@ -17,7 +19,7 @@ function getColumnsAndTickets(schema: Schema<any>) {
   return { columns, tickets };
 }
 
-function shiftTickets(schema: Schema<any>, whereFn: (t: any) => any, isShift: boolean = true) {
+function shiftTickets(schema: Schema<any>, whereFn: (t: any) => any, isShift = true) {
   (schema as any)['tickets'].where(whereFn).models.forEach((ticket: any) => {
     schema.db['tickets'].update(ticket.id, {
       order: ticket.order + (isShift ? 1 : -1),

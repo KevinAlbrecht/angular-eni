@@ -1,11 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DroppableDirective } from '../../app/board/ui/droppable.directive';
-import { DraggableDirective } from '../../app/board/ui/draggable.directive';
-import { REORDER_DROP_DATATYPE } from '../../app/board/constants';
 
-function initDropEvent(data?: any) {
+import { REORDER_DROP_DATATYPE } from '~board/constants';
+import { DraggableDirective } from '~board/ui/draggable.directive';
+import { DroppableDirective } from '~board/ui/droppable.directive';
+
+function initDropEvent(data?: unknown) {
   const dt = new DataTransfer();
   dt.setData(REORDER_DROP_DATATYPE, JSON.stringify(data));
   return new DragEvent('drop', { dataTransfer: dt });
@@ -23,7 +24,9 @@ function initDropEvent(data?: any) {
 })
 class TestComponent {
   readonly COLUMN_ID = '1';
-  onDrop(payload: any) {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onDrop(_: unknown) {}
 
   dataSet = [
     { id: '1', columnId: this.COLUMN_ID },

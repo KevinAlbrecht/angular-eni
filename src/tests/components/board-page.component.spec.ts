@@ -1,12 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BoardPageComponent } from '../../app/board/features/board-page.component';
-import { AuthStoreType, BoardStoreType, getAuthStoreSpyObj, getBoardStoreSpyObj } from '../helper';
-import { ColumnComponent } from '../../app/board/ui/column.component';
-import { BoardStore } from '../../app/board/data/board.store';
-import { AuthStore } from '../../app/identity/data/auth.store';
 import { By } from '@angular/platform-browser';
-import { getBoardWithOneColumn } from '../mocks/board';
 import { provideRouter } from '@angular/router';
+
+import { AuthStoreType, BoardStoreType, getAuthStoreSpyObj, getBoardStoreSpyObj } from '../helper';
+import { getBoardWithOneColumn } from '../mocks/board';
+
+import { BoardStore } from '~board/data/board.store';
+import { BoardPageComponent } from '~board/features/board-page.component';
+import { ColumnComponent } from '~board/ui/column.component';
+import { AuthStore } from '~identity/data/auth.store';
 
 describe('BoardPageComponent', () => {
   let fixture: ComponentFixture<BoardPageComponent>;

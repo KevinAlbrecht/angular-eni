@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test';
+
+import { getBoardWithOneColumn } from '../board';
 import { login } from '../helpers';
 
 test.describe('Ticket creation/edition', () => {
@@ -8,6 +10,7 @@ test.describe('Ticket creation/edition', () => {
   });
 
   test('create ticket', async ({ page }) => {
+    const boardMockData = getBoardWithOneColumn();
     const ticketToCreateData = {
       title: 'title',
       description: 'description',
@@ -19,7 +22,7 @@ test.describe('Ticket creation/edition', () => {
     const addTicketLink = firstColumn.locator('a', { hasText: 'Add ticket' });
 
     await addTicketLink.click();
-    await expect(page).toHaveURL('ticket?columnId=1');
+    await expect(page).toHaveURL('ticket?columnId=column1');
 
     const titleForm = page.locator('input[name="title"]');
     const descriptionForm = page.locator('textarea[name="description"]');
@@ -32,7 +35,20 @@ test.describe('Ticket creation/edition', () => {
     await descriptionForm.fill(ticketToCreateData.description);
     await typeForm.selectOption(ticketToCreateData.type);
     await assigneeForm.fill(ticketToCreateData.assignee);
-    await submitButton.click();
+
+    await Promise.all([
+      submitButton.click(),
+      page.route('**/api/board/ticket/**', (route) => {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            ticket: { ...ticketToCreateData, id: 'ticket5', columnId: 'column1', order: 5 },
+          }),
+        });
+      }),
+      page.waitForResponse('**/api/board/ticket/**'),
+    ]);
 
     await editButton.waitFor({
       state: 'attached',

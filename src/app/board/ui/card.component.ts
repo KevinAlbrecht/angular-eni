@@ -1,7 +1,9 @@
 import { Component, input } from '@angular/core';
-import { Ticket } from '../models';
-import { TitleLimiterPipe } from './title-limiter.pipe';
 import { RouterLink } from '@angular/router';
+
+import { TitleLimiterPipe } from './title-limiter.pipe';
+
+import { Ticket } from '~board/models';
 
 @Component({
   selector: 'app-card',

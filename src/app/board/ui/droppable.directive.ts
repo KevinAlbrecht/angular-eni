@@ -1,7 +1,10 @@
 import { ContentChildren, Directive, HostListener, QueryList, input, output } from '@angular/core';
-import { REORDER_DROP_DATATYPE } from '../constants';
+
 import { DraggableDirective } from './draggable.directive';
-import { DragDropPayload } from '../models';
+
+import { REORDER_DROP_DATATYPE } from '~board/constants';
+import { DragDropPayload } from '~board/models';
+import { environment } from '~env/environment';
 
 @Directive({
   selector: '[appDroppable]',
@@ -54,9 +57,10 @@ export class DroppableDirective {
         },
       ]);
     } catch (err: unknown) {
+      if (!environment.production) {
+        console.error('Error parsing drop data', err);
+      }
       return;
     }
   }
-
-  constructor() {}
 }

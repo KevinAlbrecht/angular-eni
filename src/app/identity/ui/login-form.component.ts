@@ -1,7 +1,8 @@
 import { Component, effect, inject, input, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LoginFormValue } from '../models';
-import { FormErrorsMessagePipe } from '../../shared/ui/form-errors-message.pipe';
+
+import { LoginFormValue } from '~identity/models';
+import { FormErrorsMessagePipe } from '~shared/ui/form-errors-message.pipe';
 
 @Component({
   selector: 'app-login-form',

@@ -1,18 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { TicketDetailsPageComponent } from '../../app/board/features/ticket-details-page.component';
-import { BoardStore } from '../../app/board/data/board.store';
-import { BoardStoreType, getBoardStoreSpyObj } from '../helper';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { TicketEditionCreation } from '../../app/board/models';
+
+import { BoardStoreType, getBoardStoreSpyObj } from '../helper';
 import { getSimpleTicket } from '../mocks/board';
+
+import { BoardStore } from '~board/data/board.store';
+import { TicketDetailsPageComponent } from '~board/features/ticket-details-page.component';
+import { TicketEditionCreation } from '~board/models';
 
 const testingRoutes = [
   {
     path: 'ticket',
     children: [
       { path: '', component: TicketDetailsPageComponent },
-      { path: ':ticketId', component: TicketDetailsPageComponent },
+      {
+        path: ':ticketId',
+        component: TicketDetailsPageComponent,
+      },
     ],
   },
 ];
@@ -44,7 +49,12 @@ describe('TicketDetailsPageComponent', async () => {
 
     it('should initialize form with ticketId', () => {
       const { description, title, type, assignee } = getSimpleTicket();
-      const expectedResult = { description, title, type, assignee: assignee || null };
+      const expectedResult = {
+        description,
+        title,
+        type,
+        assignee: assignee || null,
+      };
 
       expect(component.ticketId()).toBe('123');
       expect(mockBoardStore.setSelectedEntityId).toHaveBeenCalledWith('123');
@@ -62,7 +72,7 @@ describe('TicketDetailsPageComponent', async () => {
     });
 
     it('should call editTicket when form is submitted', () => {
-      const { description, title, type, assignee, columnId } = getSimpleTicket();
+      const { description, title, type, assignee } = getSimpleTicket();
       const editTicket = { description, title, type, assignee };
       component.form.setValue(editTicket);
       component.onSubmit();
@@ -127,7 +137,12 @@ describe('TicketDetailsPageComponent', async () => {
     });
 
     it('should initialize form with no ticketId', () => {
-      const expectedResult = { description: '', title: '', type: 'bug', assignee: '' };
+      const expectedResult = {
+        description: '',
+        title: '',
+        type: 'bug',
+        assignee: '',
+      };
 
       expect(component.ticketId()).toBe(undefined);
       expect(mockBoardStore.setSelectedEntityId).toHaveBeenCalledWith(null);
@@ -147,7 +162,10 @@ describe('TicketDetailsPageComponent', async () => {
       component.onSubmit();
 
       expect(mockBoardStore.createTicket).toHaveBeenCalledWith({
-        ticket: { ...editTicket, id: undefined } as TicketEditionCreation,
+        ticket: {
+          ...editTicket,
+          id: undefined,
+        } as TicketEditionCreation,
         columnId,
       });
     });

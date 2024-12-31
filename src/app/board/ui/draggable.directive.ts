@@ -1,5 +1,6 @@
 import { Directive, ElementRef, HostBinding, HostListener, input } from '@angular/core';
-import { REORDER_DROP_DATATYPE } from '../constants';
+
+import { REORDER_DROP_DATATYPE } from '~board/constants';
 
 @Directive({
   selector: '[appDraggable]',
@@ -15,13 +16,13 @@ export class DraggableDirective {
   }>();
 
   @HostListener('dragenter', ['$event'])
-  ondragEnter(event: DragEvent) {
+  ondragEnter() {
     this.dragEnterCount++;
     this.hasDragEntered = true;
   }
 
   @HostListener('dragleave', ['$event'])
-  ondragLeave(event: DragEvent) {
+  ondragLeave() {
     this.dragEnterCount--;
     if (this.dragEnterCount === 0) {
       this.hasDragEntered = false;

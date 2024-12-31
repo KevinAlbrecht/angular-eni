@@ -1,11 +1,13 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { BoardApiService } from '../../app/board/data/board-api.service';
-import { delay, of } from 'rxjs';
-import { BoardStore } from '../../app/board/data/board.store';
-import { Board, Ticket, TicketEditionCreation } from '../../app/board/models';
-import { getBoardWithOneColumn } from '../mocks/board';
-import * as helpers from '../../app/board/helpers';
 import { Router } from '@angular/router';
+import { delay, of } from 'rxjs';
+
+import { getBoardWithOneColumn } from '../mocks/board';
+
+import { BoardApiService } from '~board/data/board-api.service';
+import { BoardStore } from '~board/data/board.store';
+import * as helpers from '~board/helpers';
+import { Board, Ticket, TicketEditionCreation } from '~board/models';
 
 describe('BoardStore', () => {
   let serviceSpy: jasmine.SpyObj<BoardApiService>;

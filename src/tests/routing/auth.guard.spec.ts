@@ -1,8 +1,16 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, RedirectCommand, Route, provideRouter } from '@angular/router';
-import { authGuard } from '../../app/identity/auth.guard';
+import {
+  ActivatedRouteSnapshot,
+  RedirectCommand,
+  Route,
+  RouterStateSnapshot,
+  provideRouter,
+} from '@angular/router';
+
 import { AuthStoreType, getAuthStoreSpyObj } from '../helper';
-import { AuthStore } from '../../app/identity/data/auth.store';
+
+import { authGuard } from '~identity/auth.guard';
+import { AuthStore } from '~identity/data/auth.store';
 
 const testingRoutes = [
   { path: '', component: class {} },
@@ -11,11 +19,9 @@ const testingRoutes = [
 
 describe('AuthGuard', () => {
   let mockStore: jasmine.SpyObj<AuthStoreType>;
-  let mockSnapshot: Partial<ActivatedRouteSnapshot>;
 
   beforeEach(async () => {
     mockStore = getAuthStoreSpyObj();
-    mockSnapshot = { data: {} };
 
     TestBed.configureTestingModule({
       providers: [provideRouter(testingRoutes), { provide: AuthStore, useValue: mockStore }],
@@ -27,7 +33,7 @@ describe('AuthGuard', () => {
 
     snapshots.forEach((snapshot) => {
       const result = TestBed.runInInjectionContext(() => {
-        return authGuard(snapshot as ActivatedRouteSnapshot, {} as any);
+        return authGuard(snapshot as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
       });
 
       expect(result).toBeInstanceOf(RedirectCommand);
@@ -45,7 +51,7 @@ describe('AuthGuard', () => {
 
     snapshots.forEach(([snapshot, shouldPass]) => {
       const result = TestBed.runInInjectionContext(() => {
-        return authGuard(snapshot as ActivatedRouteSnapshot, {} as any);
+        return authGuard(snapshot as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
       });
 
       if (shouldPass) {
@@ -65,7 +71,7 @@ describe('AuthGuard', () => {
 
     snapshots.forEach((snapshot) => {
       const result = TestBed.runInInjectionContext(() => {
-        return authGuard(snapshot as ActivatedRouteSnapshot, {} as any);
+        return authGuard(snapshot as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
       });
 
       expect(result).toBeTrue();

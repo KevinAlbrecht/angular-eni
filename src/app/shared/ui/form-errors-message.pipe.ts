@@ -5,11 +5,11 @@ import { ValidationErrors } from '@angular/forms';
   name: 'formErrorsMessage',
 })
 export class FormErrorsMessagePipe implements PipeTransform {
-  transform(errors: ValidationErrors | null, map: { [key: string]: string }): string | null {
+  transform(errors: ValidationErrors | null, map: Record<string, string>): string | null {
     if (!errors) return null;
 
     return Object.entries(errors)
-      .map(([key, value]) => {
+      .map(([key]) => {
         const message = map[key] || '';
         return `${message}`;
       })

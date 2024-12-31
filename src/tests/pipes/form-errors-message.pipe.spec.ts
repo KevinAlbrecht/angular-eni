@@ -1,4 +1,4 @@
-import { FormErrorsMessagePipe } from '../../app/shared/ui/form-errors-message.pipe';
+import { FormErrorsMessagePipe } from '~shared/ui/form-errors-message.pipe';
 
 describe('FormErrorsMessagePipe', () => {
   let pipe: FormErrorsMessagePipe;
@@ -14,7 +14,10 @@ describe('FormErrorsMessagePipe', () => {
 
   it('should return the error messages separated by commas', () => {
     const errors = { required: true, minlength: true };
-    const map = { required: 'Field is required', minlength: 'Minimum length is 5' };
+    const map = {
+      required: 'Field is required',
+      minlength: 'Minimum length is 5',
+    };
     const result = pipe.transform(errors, map);
     expect(result).toBe('Field is required, Minimum length is 5');
   });

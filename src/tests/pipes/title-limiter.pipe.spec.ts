@@ -1,4 +1,4 @@
-import { TitleLimiterPipe } from '../../app/board/ui/title-limiter.pipe';
+import { TitleLimiterPipe } from '~board/ui/title-limiter.pipe';
 
 describe('TitleLimiterPipe', () => {
   let pipe: TitleLimiterPipe;
@@ -9,7 +9,6 @@ describe('TitleLimiterPipe', () => {
 
   it('should shorten the text if exceeds max length', () => {
     const text = 'Lorem ipsum dolor sit amet, consectetur';
-    const defaultLimit = 40;
     const suffix = '...';
     const tests: [string, number | undefined, string][] = [
       [text, 10, text.slice(0, 10) + suffix],

@@ -1,16 +1,18 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { tapResponse } from '@ngrx/operators';
 import { signalStore, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
 import { addEntity, setEntity, setEntities, removeAllEntities } from '@ngrx/signals/entities';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { tapResponse } from '@ngrx/operators';
-import { computed, inject } from '@angular/core';
-import { pipe, switchMap, tap } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { withEntities } from '@ngrx/signals/entities';
-import { withSelectedEntity } from '../../shared/data/features';
-import { Board, Column, DragDropLocation, Ticket, TicketEditionCreation } from '../models';
-import { getTicketstMap, reorder } from '../helpers';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { pipe, switchMap, tap } from 'rxjs';
+
 import { BoardApiService } from './board-api.service';
+
+import { getTicketstMap, reorder } from '~board/helpers';
+import { Board, Column, DragDropLocation, Ticket, TicketEditionCreation } from '~board/models';
+import { withSelectedEntity } from '~shared/data/features';
 
 type ActionStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -82,6 +84,7 @@ export const BoardStore = signalStore(
                   actionStatus: 'success',
                 });
 
+                console.log('\n\n=====', ticket);
                 patchState(store, addEntity(ticket));
                 router.navigate(['/ticket', ticket.id]);
               },
@@ -135,7 +138,10 @@ export const BoardStore = signalStore(
             tapResponse({
               next: (board) => {
                 _patchBoard(board);
-                patchState(store, { error: null, actionStatus: 'success' });
+                patchState(store, {
+                  error: null,
+                  actionStatus: 'success',
+                });
               },
               error: (error: HttpErrorResponse) =>
                 patchState(store, {
@@ -154,6 +160,13 @@ export const BoardStore = signalStore(
     };
     const resetActionStatus = () => patchState(store, { actionStatus: 'idle' });
 
-    return { load, createTicket, editTicket, reorderTicket, reset, resetActionStatus };
+    return {
+      load,
+      createTicket,
+      editTicket,
+      reorderTicket,
+      reset,
+      resetActionStatus,
+    };
   })
 );

@@ -1,12 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ColumnComponent } from '../../app/board/ui/column.component';
-import { CardComponent } from '../../app/board/ui/card.component';
-import { DraggableDirective } from '../../app/board/ui/draggable.directive';
-import { DroppableDirective } from '../../app/board/ui/droppable.directive';
-import { ActivatedRouteSnapshot, Route, RouterLink, provideRouter } from '@angular/router';
-import { setInputs } from '../helper';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
-import { Ticket } from '../../app/board/models';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Route, RouterLink, provideRouter } from '@angular/router';
+
+import { setInputs } from '../helper';
+
+import { Ticket } from '~board/models';
+import { CardComponent } from '~board/ui/card.component';
+import { ColumnComponent } from '~board/ui/column.component';
+import { DraggableDirective } from '~board/ui/draggable.directive';
+import { DroppableDirective } from '~board/ui/droppable.directive';
 
 const testingRoutes = [{ path: '', component: class {} }] as Route[];
 
@@ -17,9 +19,7 @@ const testingRoutes = [{ path: '', component: class {} }] as Route[];
 class MockUserCardComponent {}
 
 describe('ColumnComponent', () => {
-  let component: ColumnComponent;
   let fixture: ComponentFixture<ColumnComponent>;
-  let mockSnapshot: Partial<ActivatedRouteSnapshot>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -27,7 +27,9 @@ describe('ColumnComponent', () => {
       providers: [provideRouter(testingRoutes)],
     })
       .overrideComponent(ColumnComponent, {
-        remove: { imports: [CardComponent, DraggableDirective, DroppableDirective] },
+        remove: {
+          imports: [CardComponent, DraggableDirective, DroppableDirective],
+        },
         add: {
           imports: [MockUserCardComponent],
           schemas: [NO_ERRORS_SCHEMA],
@@ -35,9 +37,7 @@ describe('ColumnComponent', () => {
       })
       .compileComponents();
 
-    mockSnapshot = { data: {} };
     fixture = TestBed.createComponent(ColumnComponent);
-    component = fixture.componentInstance;
   });
 
   it('should render the column title', () => {

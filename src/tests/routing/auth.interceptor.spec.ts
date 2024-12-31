@@ -1,14 +1,16 @@
 import { HttpRequest, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from '../../app/identity/auth.interceptor';
-import { AuthStore } from '../../app/identity/data/auth.store';
-import { AuthStoreType, getAuthStoreSpyObj } from '../helper';
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+
+import { AuthStoreType, getAuthStoreSpyObj } from '../helper';
+
+import { authInterceptor } from '~identity/auth.interceptor';
+import { AuthStore } from '~identity/data/auth.store';
 
 describe('authInterceptor', () => {
   const mockRequest = new HttpRequest('GET', '/api/data');
   let mockStore: jasmine.SpyObj<AuthStoreType>;
-  let mockNext: any = (request: HttpRequest<unknown>) => {};
+  let mockNext: jasmine.Spy<jasmine.Func>;
 
   beforeEach(() => {
     mockStore = getAuthStoreSpyObj();
