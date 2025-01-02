@@ -2,16 +2,32 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { tapResponse } from '@ngrx/operators';
-import { signalStore, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
-import { addEntity, setEntity, setEntities, removeAllEntities } from '@ngrx/signals/entities';
+import {
+  signalStore,
+  withState,
+  withMethods,
+  patchState,
+  withComputed,
+  withHooks,
+  WritableStateSource,
+} from '@ngrx/signals';
+import {
+  addEntity,
+  setEntity,
+  setEntities,
+  removeAllEntities,
+  setAllEntities,
+  EntityState,
+} from '@ngrx/signals/entities';
 import { withEntities } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap } from 'rxjs';
+import { filter, map, pipe, switchMap, tap } from 'rxjs';
 
-import { BoardApiService } from './board-api.service';
+import { BoardService } from './board.service';
 
 import { getTicketstMap, reorder } from '~board/helpers';
 import { Board, Column, DragDropLocation, Ticket, TicketEditionCreation } from '~board/models';
+import { ConnectivityService } from '~shared/data/connectivity.service';
 import { withSelectedEntity } from '~shared/data/features';
 
 type ActionStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -30,6 +46,12 @@ const initialState: State = {
   error: null,
 };
 
+type BoardStoreType = WritableStateSource<State & EntityState<Ticket>>;
+export const createBoardPatcher = (store: BoardStoreType) => (board: Board) => {
+  patchState(store, { columns: board.columns });
+  patchState(store, setAllEntities(board.tickets));
+};
+
 export const BoardStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
@@ -43,19 +65,15 @@ export const BoardStore = signalStore(
     isLoadingAction: computed(() => actionStatus() === 'loading'),
   })),
   withMethods((store) => {
-    const api = inject(BoardApiService);
+    const boardService = inject(BoardService);
     const router = inject(Router);
-
-    const _patchBoard = (board: Board) => {
-      patchState(store, { columns: board.columns });
-      patchState(store, setEntities(board.tickets));
-    };
+    const _patchBoard = createBoardPatcher(store);
 
     const load = rxMethod<void>(
       pipe(
         tap(() => patchState(store, { isLoadingData: true })),
         switchMap(() =>
-          api.getBoard().pipe(
+          boardService.getBoard().pipe(
             tapResponse({
               next: (board) => {
                 _patchBoard(board);
@@ -76,7 +94,7 @@ export const BoardStore = signalStore(
       pipe(
         tap(() => patchState(store, { actionStatus: 'loading' })),
         switchMap(({ ticket, columnId }) =>
-          api.createTicket(ticket, columnId || '').pipe(
+          boardService.createTicket(ticket, columnId || '').pipe(
             tapResponse({
               next: ({ ticket }) => {
                 patchState(store, {
@@ -84,7 +102,6 @@ export const BoardStore = signalStore(
                   actionStatus: 'success',
                 });
 
-                console.log('\n\n=====', ticket);
                 patchState(store, addEntity(ticket));
                 router.navigate(['/ticket', ticket.id]);
               },
@@ -103,7 +120,7 @@ export const BoardStore = signalStore(
       pipe(
         tap(() => patchState(store, { actionStatus: 'loading' })),
         switchMap((ticket) =>
-          api.editTicket(ticket).pipe(
+          boardService.editTicket(ticket).pipe(
             tapResponse({
               next: ({ ticket }) => {
                 patchState(store, {
@@ -129,12 +146,15 @@ export const BoardStore = signalStore(
     }>(
       pipe(
         tap(() => patchState(store, { actionStatus: 'loading' })),
-        tap(({ from, to }) => {
+        map(({ from, to }) => {
           const locallyOrderedTickets = reorder(from, to, store.entities(), store.columns());
+          return { from, to, locallyOrderedTickets };
+        }),
+        tap(({ locallyOrderedTickets }) => {
           patchState(store, setEntities(locallyOrderedTickets));
         }),
-        switchMap(({ from, to }) =>
-          api.reorderTicket(from, to).pipe(
+        switchMap(({ from, to, locallyOrderedTickets }) =>
+          boardService.reorderTicket(from, to, locallyOrderedTickets).pipe(
             tapResponse({
               next: (board) => {
                 _patchBoard(board);
@@ -157,7 +177,9 @@ export const BoardStore = signalStore(
     const reset = () => {
       patchState(store, initialState);
       patchState(store, removeAllEntities());
+      boardService.resetLocalData().subscribe();
     };
+
     const resetActionStatus = () => patchState(store, { actionStatus: 'idle' });
 
     return {
@@ -167,6 +189,33 @@ export const BoardStore = signalStore(
       reorderTicket,
       reset,
       resetActionStatus,
+    };
+  }),
+  withHooks((store) => {
+    const boardService = inject(BoardService);
+    const connectivityService = inject(ConnectivityService);
+    const _patchBoard = createBoardPatcher(store);
+
+    return {
+      onInit: () => {
+        connectivityService.onlineStatus$
+          .pipe(
+            filter((isOnline) => isOnline === true && boardService.hasChangesToSync),
+            tap(() => patchState(store, { isLoadingData: true })),
+            switchMap(() =>
+              boardService.syncChanges().pipe(
+                tapResponse({
+                  next: ({ board }) => {
+                    _patchBoard(board);
+                  },
+                  error: (error: HttpErrorResponse) => patchState(store, { error: error.message }),
+                  finalize: () => patchState(store, { isLoadingData: false }),
+                })
+              )
+            )
+          )
+          .subscribe();
+      },
     };
   })
 );

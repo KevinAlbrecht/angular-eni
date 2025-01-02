@@ -1,10 +1,12 @@
 import { Component, inject, linkedSignal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { AuthStore } from '~identity/data/auth.store';
 import { LoginFormValue } from '~identity/models';
 import { LoginFormComponent } from '~identity/ui/login-form.component';
 import { NavMenuComponent } from '~layout/ui/nav-menu.component';
 import { UserCardComponent } from '~layout/ui/user-card.component';
+import { ConnectivityService } from '~shared/data/connectivity.service';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +14,9 @@ import { UserCardComponent } from '~layout/ui/user-card.component';
   template: `
     <div id="wrapper">
       <app-nav-menu [isAdmin]="isUserAdmin()" />
+      @if (!isOnline()) {
+        <span>OFFLINE MODE</span>
+      }
       <app-user-card (toggleAuth)="onToggleAuth()" [username]="userName()" />
       @if (isLoginFormVisible()) {
         <div class="modal-wrapper">
@@ -42,7 +47,9 @@ import { UserCardComponent } from '~layout/ui/user-card.component';
 })
 export class HeaderComponent {
   private authStore = inject(AuthStore);
+  private connectivityService = inject(ConnectivityService);
 
+  isOnline = toSignal(this.connectivityService.onlineStatus$);
   isUserConnected = this.authStore.isUserConnected;
   isUserAdmin = this.authStore.isUserAdmin;
   userName = this.authStore.username;

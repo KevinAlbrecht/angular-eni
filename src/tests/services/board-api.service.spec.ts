@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { getBoardWithMultipleColumns, getCreationTicket, getEditionTicket } from '../mocks/board';
 
-import { BoardApiService } from '~board/data/board-api.service';
+import { BoardApiService } from '~board/data/sources/board-api.service';
 import { GetBoardResponse, DragDropLocation, TicketEditionCreation } from '~board/models';
 
 describe('BoardApiService', () => {

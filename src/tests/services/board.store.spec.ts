@@ -1,26 +1,27 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { delay, of } from 'rxjs';
+import { delay, of, EMPTY } from 'rxjs';
 
 import { getBoardWithOneColumn } from '../mocks/board';
 
-import { BoardApiService } from '~board/data/board-api.service';
+import { BoardService } from '~board/data/board.service';
 import { BoardStore } from '~board/data/board.store';
 import * as helpers from '~board/helpers';
 import { Board, Ticket, TicketEditionCreation } from '~board/models';
 
 describe('BoardStore', () => {
-  let serviceSpy: jasmine.SpyObj<BoardApiService>;
+  let serviceSpy: jasmine.SpyObj<BoardService>;
   let routerSpy: jasmine.SpyObj<Router>;
 
   let boardWithOneColumn: Board;
   beforeEach(() => {
-    serviceSpy = jasmine.createSpyObj('BoardApiService', [
+    serviceSpy = jasmine.createSpyObj('BoardService', [
       'getBoard',
       'reorderTicket',
       'createTicket',
       'editTicket',
       'getTicketById',
+      'resetLocalData',
     ]);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
@@ -28,11 +29,13 @@ describe('BoardStore', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: BoardApiService, useValue: serviceSpy },
+        { provide: BoardService, useValue: serviceSpy },
         BoardStore,
         { provide: Router, useValue: routerSpy },
       ],
     });
+
+    serviceSpy.resetLocalData.and.returnValue(EMPTY);
   });
 
   it('should load the board', fakeAsync(() => {
@@ -122,7 +125,11 @@ describe('BoardStore', () => {
 
     expect(isLoadingAction()).toBeFalse();
     expect(ticketByColumnId()).toEqual(expectedNewBoard);
-    expect(serviceSpy.reorderTicket).toHaveBeenCalledOnceWith(from, to);
+    expect(serviceSpy.reorderTicket).toHaveBeenCalledOnceWith(
+      from,
+      to,
+      helpers.reorder(from, to, tickets, columns)
+    );
   }));
 
   it('should reset all information', fakeAsync(() => {

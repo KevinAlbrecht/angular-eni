@@ -7,9 +7,11 @@ import {
   DragDropLocation,
   GetBoardResponse,
   TicketEditionCreation,
-} from '../models';
+  Board,
+} from '../../models';
 
 import { environment } from '~env/environment';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -39,9 +41,9 @@ export class BoardApiService {
     });
   }
 
-  editTicket(modele: TicketEditionCreation) {
+  editTicket(model: TicketEditionCreation) {
     return this.http.patch<TicketResponse>(`${environment.apiBaseUrl}api/board/ticket`, {
-      ticket: modele,
+      ticket: model,
     });
   }
 
@@ -49,5 +51,11 @@ export class BoardApiService {
     return this.http
       .get<TicketResponse>(`${environment.apiBaseUrl}api/board/ticket/${id}`)
       .pipe(map((r) => r.ticket));
+  }
+
+  syncBoard(offlineBoard: Board) {
+    return this.http.post<GetBoardResponse>(`${environment.apiBaseUrl}api/board/sync`, {
+      board: offlineBoard,
+    });
   }
 }

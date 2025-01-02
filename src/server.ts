@@ -2,7 +2,7 @@
 import { Model, createServer, Response, Request, hasMany, belongsTo } from 'miragejs';
 import type Schema from 'miragejs/orm/schema';
 
-import { DragDropLocation } from '~board/models';
+import { DragDropLocation, Ticket } from '~board/models';
 
 let server;
 const userSessions: Record<string, { expires: number; isAdmin: boolean }> = {};
@@ -245,6 +245,29 @@ export default function initServer() {
           return new Response(404, {}, { error: 'Not found' });
         }
         return new Response(200, {}, { ticket });
+      });
+
+      this.post('/board/sync', (schema, request) => {
+        const user = checkAuthToken(request);
+        if (user === null) {
+          return new Response(401, {}, { error: 'Unauthorized' });
+        }
+
+        const { board } = JSON.parse(request.requestBody);
+
+        const tickets = board.tickets as Ticket[];
+        tickets.forEach((ticket: Ticket) => {
+          if (ticket.id.startsWith('local-')) {
+            schema.db['tickets'].insert({
+              ...ticket,
+              id: undefined,
+            });
+          } else {
+            schema.db['tickets'].update(ticket.id, ticket);
+          }
+        });
+
+        return new Response(200);
       });
 
       this.post(
