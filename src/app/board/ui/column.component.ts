@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
       <div id="list" appDroppable [columnId]="column().id" (dropItem)="reorderTicket.emit($event)">
         @for (ticket of tickets(); track ticket.id) {
           <app-card
+            data-testid="ticket"
             [ticket]="ticket"
             appDraggable
             [appDraggableData]="{

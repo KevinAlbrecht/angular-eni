@@ -18,6 +18,7 @@ import { AuthStore } from '../../identity/data/auth.store';
           } @else {
             @for (column of columns(); track column.id) {
               <app-column
+                data-testid="column"
                 [column]="column"
                 [tickets]="ticketByColumnId()[column.id]"
                 (reorderTicket)="onReorderTicket($event)"

@@ -6,7 +6,11 @@ import { Component, computed, input, output } from '@angular/core';
   template: `
     <div>
       <span>{{ username() }}</span>
-      <button (click)="toggleAuth.emit()" [class]="isConnected() ? 'connected' : ''">
+      <button
+        data-testid="toggle-log-button"
+        (click)="toggleAuth.emit()"
+        [class]="isConnected() ? 'connected' : ''"
+      >
         {{ isConnected() ? 'Log out' : 'Log in' }}
       </button>
     </div>

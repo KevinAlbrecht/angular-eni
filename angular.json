@@ -89,6 +89,17 @@
             ],
             "scripts": []
           }
+        },
+        "e2e": {
+          "builder": "playwright-ng-schematics:playwright",
+          "options": {
+            "devServerTarget": "kanban:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "kanban:serve:production"
+            }
+          }
         }
       }
     }

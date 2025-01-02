@@ -24,7 +24,7 @@ import { RouterLink } from '@angular/router';
           <section>
             <h4>Title</h4>
             @if (isFormMode()) {
-              <input formControlName="title" />
+              <input formControlName="title" name="title" />
               <span class="error"
                 >{{ getControlErrors('title') | formErrorsMessage: ERROR_MESSAGES }}
               </span>
@@ -35,7 +35,7 @@ import { RouterLink } from '@angular/router';
           <section>
             <h4>Description</h4>
             @if (isFormMode()) {
-              <textarea formControlName="description"></textarea>
+              <textarea formControlName="description" name="description"></textarea>
               <span class="error"
                 >{{ getControlErrors('description') | formErrorsMessage: ERROR_MESSAGES }}
               </span>
@@ -46,7 +46,7 @@ import { RouterLink } from '@angular/router';
           <section>
             <h4>Type</h4>
             @if (isFormMode()) {
-              <select formControlName="type">
+              <select formControlName="type" name="type">
                 @for (option of ticketTypes; track option) {
                   <option [value]="option">
                     {{ option }}
@@ -63,7 +63,7 @@ import { RouterLink } from '@angular/router';
           <section>
             <h4>Assigned to</h4>
             @if (isFormMode()) {
-              <input formControlName="assignee" />
+              <input formControlName="assignee" name="assignee" />
               <span class="error"
                 >{{ getControlErrors('assignee') | formErrorsMessage: ERROR_MESSAGES }}
               </span>

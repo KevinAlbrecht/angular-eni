@@ -13,8 +13,10 @@ import { FormErrorsMessagePipe } from '../../shared/ui/form-errors-message.pipe'
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="control-wrapper">
           <div class="field">
-            <label>Email :</label>
-            <input formControlName="email" type="email" />
+            <label
+              >Email :
+              <input formControlName="email" type="email" />
+            </label>
           </div>
           <span class="error">{{
             getControlErrors('email') | formErrorsMessage: ERROR_MESSAGES
@@ -22,8 +24,10 @@ import { FormErrorsMessagePipe } from '../../shared/ui/form-errors-message.pipe'
         </div>
         <div class="control-wrapper">
           <div class="field">
-            <label>Password :</label>
-            <input formControlName="password" type="password" />
+            <label
+              >Password :
+              <input formControlName="password" type="password" />
+            </label>
           </div>
           <span class="error">{{
             getControlErrors('password') | formErrorsMessage: ERROR_MESSAGES
@@ -53,7 +57,7 @@ import { FormErrorsMessagePipe } from '../../shared/ui/form-errors-message.pipe'
         }
         .control-wrapper {
           width: 250px;
-          .field {
+          .field > label {
             display: flex;
             justify-content: space-between;
           }
